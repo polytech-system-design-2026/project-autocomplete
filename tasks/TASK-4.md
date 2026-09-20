@@ -174,7 +174,7 @@ docker run --rm -v "$PWD/observability/prometheus:/rules:ro" --entrypoint promto
 
 ## Как сдать
 
-PR `develop → main`, reviewer `vladefr97`, сообщение в чат: «project-autocomplete, ник, этап 4, PR готов». Подробно — в закреплённых сообщениях чата курса.
+PR `develop → main`, reviewer `vladefr97`, сообщение в чат: «project-autocomplete, ник, этап 4, PR готов». Подробно — в [README](../README.md#как-сдавать), раздел «Как сдавать».
 
 ## Типичные ошибки
 
