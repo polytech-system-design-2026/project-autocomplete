@@ -101,7 +101,7 @@ make down            # остановить и удалить данные
 
 ## Как сдать
 
-Коммит и пуш в `develop`, PR `develop → main`, reviewer `vladefr97`, сообщение в чат: «project-autocomplete, ник, этап 2, PR готов». Подробно — в `Договоренности.md` курса.
+Коммит и пуш в `develop`, PR `develop → main`, reviewer `vladefr97`, сообщение в чат: «project-autocomplete, ник, этап 2, PR готов». Подробно — в закреплённых сообщениях чата курса.
 
 ## Типичные ошибки
 
