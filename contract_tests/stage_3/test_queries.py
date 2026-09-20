@@ -5,7 +5,14 @@ from typing import Any
 import httpx
 import pytest
 
-from contract_tests.helpers import eventually, require, stopped_service, unique_suffix
+from contract_tests.helpers import (
+    compose,
+    eventually,
+    require,
+    stopped_service,
+    unique_suffix,
+    wait_until_healthy,
+)
 
 POPULARITY_DEADLINE = 5.0
 
@@ -86,6 +93,9 @@ def test_suggest_without_database(client: httpx.Client) -> None:
     )
     first = suggestions(client, p)
     require(bool(first), f"GET /suggest?q={p}: ждали две подсказки, получили {first}.")
+    # Перезапуск app стирает кэш внутри процесса: пройти тест можно только с Redis.
+    compose("restart", "app")
+    wait_until_healthy(client)
     with stopped_service(client, "db"):
         resp = client.get("/suggest", params={"q": p})
     again = resp.json().get("suggestions") if resp.status_code == 200 else None

@@ -21,17 +21,21 @@ def test_http_requests_total_counts_requests(client: httpx.Client) -> None:
 
 def test_unknown_paths_do_not_create_series(client: httpx.Client) -> None:
     raw = f"/no/such/page-{unique_suffix()}"
+    before_404 = metric_sum(metric_samples(client), "http_requests_total", status="404")
     client.get(raw)
-    paths = {
-        labels.get("path")
-        for name, labels, _ in metric_samples(client)
-        if name == "http_requests_total"
-    }
+    samples = metric_samples(client)
+    paths = {labels.get("path") for name, labels, _ in samples if name == "http_requests_total"}
     require(
         raw not in paths,
         f"Запрос на несуществующий путь {raw} создал в http_requests_total метку path с сырым "
         "путём. В path — только шаблон маршрута; для запросов мимо маршрутов — одно общее "
         "значение, иначе любой сканер создаст тысячи временных рядов.",
+    )
+    after_404 = metric_sum(samples, "http_requests_total", status="404")
+    require(
+        after_404 - before_404 >= 1,
+        'Ответ 404 не попал в http_requests_total с меткой status="404". Считайте метрики для '
+        "любого ответа, включая ошибки, — иначе доля 5xx и алерт HighErrorRate не работают.",
     )
 
 

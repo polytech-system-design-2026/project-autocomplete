@@ -101,6 +101,21 @@ def test_load_counts_unique_normalized(client: httpx.Client) -> None:
         f"Две фразы, одинаковые после нормализации, — это одна фраза: ждали {{'loaded': 1}}, "
         f"получили {body}.",
     )
+    got = suggest(client, p)
+    require(
+        got == [{"text": f"{p} dup", "weight": 2}],
+        f"Если фраза встречается в запросе дважды, остаётся последнее значение веса: ждали "
+        f"вес 2, получили {got}.",
+    )
+
+
+def test_text_longer_than_200_is_rejected(client: httpx.Client) -> None:
+    long_text = prefix() + " " + "a" * 200
+    resp = client.post("/phrases", json={"text": long_text, "weight": 1})
+    require(
+        resp.status_code == 422,
+        f"POST /phrases с текстом длиннее 200 символов: ожидали 422, получили {resp.status_code}.",
+    )
 
 
 @pytest.mark.parametrize(

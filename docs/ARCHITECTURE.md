@@ -41,7 +41,7 @@
 | PUT | `/phrases` | `{"phrases": [{"text": "python tutorial", "weight": 10}, ...]}` | `{"loaded": 2}` | 200; 422 — пустой список, пустой `text`, `weight < 0` |
 | POST | `/phrases` | `{"text": "...", "weight": 1}` | `{"id", "text", "weight"}` | 201; 409 — фраза уже есть; 422 |
 | GET | `/suggest?q=<префикс>&limit=<K>` | — | `{"query": "py", "suggestions": [{"text", "weight"}, ...]}` | 200; 422 — пустой `q`, `limit` вне 1–50 |
-| GET | `/health` | — | `{"status": "ok"}` | 200 |
+| GET | `/health` | — | `{"status": "ok"}` | 200; 503 — PostgreSQL (с этапа 3 и Redis) недоступен |
 
 На этапе 3 добавляется:
 
